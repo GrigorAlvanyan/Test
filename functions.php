@@ -5,31 +5,27 @@ function isValidMacAddress($mac)
     return filter_var($mac, FILTER_VALIDATE_MAC);
 }
 
-
 function getAssociatedStations($associatedStationLines) {
 
-
-
     $associatedStations = [];
-
     $mac = '';
     foreach ($associatedStationLines as $key => $line) {
 
         $macAddress = explode('  ', $line);
-
         if (isset($macAddress[0]) && isValidMacAddress($macAddress[0])) {
             $mac = $macAddress[0];
-//         dd($mac);die;
             $associatedStations[$mac]['mac'] = $mac;
 
         } elseif (strpos($line, 'RX:')) {
             $rxLine = trim($line);
             $rxLine = substr($rxLine, 0, strpos($rxLine, '  '));
+
             $rxLine = explode(', ', $rxLine);
-            unset($rxLine[count($rxLine)-1]);
+
+            unset($rxLine[count($rxLine)]);
             $rxLine = implode(', ',$rxLine);
             $associatedStations[$mac]['rx'] = $rxLine;
-        } elseif(strpos($line, 'TX:')) {
+        } elseif (strpos($line, 'TX:')) {
             $txLine = trim($line);
             $txLine = substr($txLine, 0, strpos($txLine, '  '));
             $txLine = explode(', ', $txLine);
@@ -38,53 +34,50 @@ function getAssociatedStations($associatedStationLines) {
             $associatedStations[$mac]['tx'] = $txLine;
         }
 
-
-
     }
     return $associatedStations;
 }
-
 
 
 function getWireless($wirelessLines)
 {
 
     $strLines = [];
-    foreach ($wirelessLines as $lines){
+    foreach ($wirelessLines as $lines) {
         $lines =
         $strLines[] = explode('  ', ltrim($lines));
     }
 
     $strLine = [];
     foreach ($strLines as $line) {
-        if(count($line) == 2) {
+        if (count($line) == 2) {
 
             $strLine[] = $line[0];
             $strLine[] = $line[1];
             unset($line[1]);
 
-        }else{
+        } else {
             $strLine[] = $line[0];
         }
 
     }
 
-    $wireless = [];
 
+    $wireless = [];
     foreach ($strLine as $key => $str) {
         $keys = '';
         $str = explode(': ', $str);
         $keys = $str[0];
-        if($keys == 'ESSID'){
-            $wireless[] = 'SSID' .':'. $str[1];
-        } elseif($keys == 'Channel') {
-            $wireless[] = $keys .':'. $str[1];
-        } elseif($keys == 'Bit Rate') {
-            $wireless[] = $keys .':'. $str[1];
-        } elseif($keys == 'Access Point') {
-            $wireless[] = 'BSSID' .':'. $str[1];
+        if ($keys == 'ESSID') {
+            $wireless[] = 'SSID' . ':' . $str[1];
+        } elseif ($keys == 'Channel') {
+            $wireless[] = $keys . ':' . $str[1];
+        } elseif ($keys == 'Bit Rate') {
+            $wireless[] = 'Bitrate' . ':' . $str[1];
+        } elseif ($keys == 'Access Point') {
+            $wireless[] = 'BSSID' . ':' . $str[1];
         } elseif ($keys == 'Encryption') {
-            $wireless[] = $keys .':'. $str[1];
+            $wireless[] = $keys . ':' . $str[1];
         }
     }
 
@@ -112,7 +105,7 @@ function getDhcpLeases($dhcpLeasesFileLines) {
     $dhcpLeases = [];
     foreach($dhcpLeasesFileLines as $key => $line) {
         $line = array_reverse(explode(' ', $line));
-
+        unset($line[0]);
         foreach ($line as $item) {
 
             if (isValidTimeStamp($item)) {
