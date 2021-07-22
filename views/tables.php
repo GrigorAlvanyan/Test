@@ -5,16 +5,14 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <style>
-        <?php
-            require_once 'styles.css';
-        ?>
-    </style>
+    <link rel="stylesheet" href="<?php __DIR__?>css/styles.css">
+    <title>HGW</title>
 </head>
 <body>
+
 <?php if(!empty($dhcpResultArr)) : ?>
-    <table><h2> DHCP Leases </h2>
+    <table>
+        <h2> DHCP Leases </h2>
         <tr>
             <th><b>Hostname</b></th>
             <th><b>IPv4-Address</b></th>
@@ -33,18 +31,30 @@
 
 
 
-<table><h2>Wireless</h2>
-
-    <?php if(!empty($wireless)) : ?>
-        <?php foreach ($wireless as  $item) : ?>
+<?php if(!empty($wireless)) : ?>
+    <div class="wireless">
+        <h2>Wireless</h2>
+        <table>
             <tr>
-                <td><?= $item; ?></td>
+                <td><strong>SSID:</strong> <?php echo isset($wireless['SSID']) ? $wireless['SSID'] : ''?></td>
+            </tr>
+            <tr>
+                <td><strong>Channel:</strong> <?php echo isset($wireless['Channel']) ? $wireless['Channel'] : ''?></td>
+            </tr>
+            <tr>
+                <td><strong>Bitrate:</strong> <?php echo isset($wireless['Bitrate']) ? $wireless['Bitrate'] : ''?></td>
+            </tr>
+            <tr>
+                <td><strong>BSSID:</strong> <?php echo isset($wireless['BSSID']) ? $wireless['BSSID'] : ''?></td>
+            </tr>
+            <tr>
+                <td><strong>Encryption:</strong> <?php echo isset($wireless['Encryption']) ? $wireless['Encryption'] : ''?></td>
             </tr>
 
-        <?php endforeach;?>
-    <?php endif; ?>
+        </table>
+    </div>
+<?php endif; ?>
 
-</table>
 
 
 <?php if(!empty($associatedLines)) : ?>
@@ -61,7 +71,7 @@
 
                 <tr >
                     <td style="border-right: 1px solid transparent;">
-                        <img width=30 src='<?php echo __DIR__ ;?>\img\<?= 'expert'; ?>.png'>
+                        <img width=30 src='img/associated_icon.png'>
                     </td>
                     <td>
                         <?php echo $res['mac']; ?>

@@ -7,20 +7,20 @@ function dd($res)
     echo '</pre>';
 }
 
-require_once 'functions.php';
+require_once 'app/functions.php';
 require_once(__DIR__ . '/telnet/TelnetClient.php');
 
 use TelnetClient\TelnetClient;
 
-$telnet = new TelnetClient('****', 1111);
+$telnet = new TelnetClient('****', 111);
 $telnet->connect();
 $telnet->setPrompt('$'); //setRegexPrompt() to use a regex
 $telnet->login('****', '****');
+
 $command = 'iwinfo wlan0 assoclist';
 $cmdResult = $telnet->exec($command);
 
 $cmdResults = linesRemove($cmdResult);
-
 $associatedLines = getAssociatedStations($cmdResults);
 $associatedLines = isset($associatedLines) && !empty($associatedLines) ? $associatedLines : [];
 
@@ -35,7 +35,6 @@ $command = 'cat /tmp/dhcp.leases';
 $dhcpResult = $telnet->exec($command);
 
 $dhcpResults = linesRemove($dhcpResult);
-$dhcpResults = isset($dhcpResults) && !empty($dhcpResults) ? $dhcpResults : [];
 
 $dhcpResultArr = getDhcpLeases($dhcpResults);
 $dhcpResultArr = isset($dhcpResultArr) && !empty($dhcpResultArr) ?  $dhcpResultArr : [];
@@ -44,4 +43,4 @@ $dhcpResultArr = isset($dhcpResultArr) && !empty($dhcpResultArr) ?  $dhcpResultA
 $telnet->disconnect();
 ?>
 
-<?php include 'tables.php'?>
+<?php include 'views/tables.php'?>
