@@ -125,7 +125,7 @@ function getDhcpLeases($dhcpLeasesFileLines) {
                 $d2 = new DateTime($completed_time);
                 $interval = $d2->diff($d1);
 
-                $dhcpLeases[$key][] = $interval->format(' %hh %Im %Ss');
+                $dhcpLeases[$key][] = $interval->format(' %hh %im %ss');
 
             } else {
                 $dhcpLeases[$key][] = $item;
