@@ -110,7 +110,23 @@ function getDhcpLeases($dhcpLeasesFileLines) {
         foreach ($line as $item) {
 
             if (isValidTimeStamp($item)) {
-                $dhcpLeases[$key][] = date('h:m:s',$item);
+
+                $presentTime = time();
+                $presentDate =  date('Y-m-d H:i:s', $presentTime);
+                $timeDifference = $item - $presentTime;
+                $timeDifference = $presentTime - $timeDifference;
+
+                $oldDate=  date('Y-m-d H:i:s', $timeDifference);
+
+                $assigned_time = "{$oldDate}";
+                $completed_time= "{$presentDate}";
+
+                $d1 = new DateTime($assigned_time);
+                $d2 = new DateTime($completed_time);
+                $interval = $d2->diff($d1);
+
+                $dhcpLeases[$key][] = $interval->format(' %hh %Im %Ss');
+
             } else {
                 $dhcpLeases[$key][] = $item;
             }
